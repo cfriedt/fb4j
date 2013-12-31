@@ -1,0 +1,5 @@
+2013-12-31	Christopher Friedt	<chrisfriedt@gmail.com>
+	* initial check-in, set version to 0.1
+	* updated README, COPYING
+	* added TestFB4J.java to src/test
+

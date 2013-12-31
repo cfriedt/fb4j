@@ -1,0 +1,93 @@
+This is FB4J!
+=============
+
+FB4J is a way of abstracting the platform's framebuffer in such a way that makes managing it and drawing to it from Java easy!
+
+The current target platform is Linux, with the native API described here:
+
+https://www.kernel.org/doc/Documentation/fb/framebuffer.txt
+
+If and when other platforms are to be supported, the FB4J API may change slightly to accommodate the native APIs of those platforms.
+
+Build & Installation
+====================
+
+If you're building a development version and 'configure' does not exist, run
+
+$ sh autogen.sh
+
+Then, run
+
+$ JDK_HOME=/path/to/jdk/home ./configure
+$ make
+$ make install
+
+Example Code
+============
+
+There is example code in src/test/TestFB4J.java
+
+Running the Example
+===================
+
+Build & install FB4J as described.
+
+$ cd ~
+$ cp /usr/share/fb4j/example/TestFB4J.java .
+$ javac -cp /usr/share/fb4j/lib/fb4j.jar TestFB4J.java
+$ LD_LIBRARY_PATH=/usr/share/fb4j/lib \
+> jamvm -cp /usr/share/fb4j/lib/fb4j.jar TestFB4J
+
+FAQ
+===
+
+1) What license is this code distributed under?
+-----------------------------------------------
+
+The 2-clause BSD License (see the file 'COPYING').
+
+2) How do I build JamVM and GNU Classpath with the required patches to run FB4J?
+--------------------------------------------------------------------------------
+
+The patches (see 'Caveats' below), are hosted on github.
+
+Download, patch, build and install GNU's classpath-0.98 and its related dependencies:
+http://www.gnu.org/software/classpath/downloads/downloads.html
+
+Download, patch, build and install jamvm-1.5.4 and its related dependencies:
+http://sourceforge.net/projects/jamvm/files/
+
+You should be ready to go after that.
+
+3) Why are you writing to the framebuffer in Java?
+--------------------------------------------------
+
+Because we can! ... And especially because the "Java overhead" is practically nothing once the required patches are in place. It is both impossible and incredibly slow to use Java to write to the framebuffer otherwise, as all pixel operations have a rather nasty and unnecessary JNI overhead. We were able to speed up reads and writes to MappedByteBuffers of regular files using this method by a factor of up to 150x.
+
+4) Are there any other projects that might benefit from the above patches?
+--------------------------------------------------------------------------
+
+Most certainly, yes! V4L4J (https://code.google.com/p/v4l4j/) is the first one that comes to mind.
+
+But virtually any Java code that actually has to mmap(2) and speak to devices in /dev on any POSIX operating system would benefit.
+
+Caveats
+=======
+
+FB4J relies on modifications to JamVM and GNU Classpath that allowed
+
+1) access to the underlying integer fd of the FileDescriptor class
+2) special files to be mapped into memory using mmap(2)
+3) regular Java arrays to be created from pointers
+4) representation of Java's buffer types as ByteBuffer, ShortBuffer, IntBuffer, FloatBuffer, LongBuffer, and DoubleBuffer
+
+While it would be helpful if these patches were eventually merged into JamVM and GNU Classpath upstream, it might be very difficult to do so unless an alternative solution for 3) can be found, as it requires doing something outside-of-bounds of the JNI specification, and therefore could introduce incompatibilities.  
+
+As such, you will not be able to run this code with just _any_ JVM (yet). That makes JamVM and GNU Classpath the _only_ JVM in existence today that allows such highly efficient access to device memory. The memory is also unmapped upon object finalization, and therefore FB4J can be used without any explicit need for memory management.
+
+For more information, see 
+
+https://plus.google.com/107058277812335526223/posts/N4eVKvn2oL4
+
+
+Happy FB Drawing!!
