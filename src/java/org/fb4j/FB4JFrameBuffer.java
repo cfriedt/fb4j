@@ -1,7 +1,5 @@
 package org.fb4j;
 
-import com.sun.jna.*;
-
 import java.io.*;
 import java.nio.*;
 import java.nio.channels.*;
