@@ -44,7 +44,7 @@ public class FB4JVarScreenInfo extends Structure {
 	public int rotate;
 	public int colorspace;
 
-	public int[] reserved; // __u32 reserved[4];
+	public int[] reserved = new int[4];
 
 
 	@Override

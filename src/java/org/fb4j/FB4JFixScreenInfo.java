@@ -8,7 +8,7 @@ public class FB4JFixScreenInfo extends Structure {
 
 	public static class ByReference extends FB4JFixScreenInfo implements Structure.ByReference {}
 
-	public String id; // char id[16]
+	public byte[] id = new byte[16];
 	public long smem_start;
 
 	public int smem_len;
@@ -25,12 +25,12 @@ public class FB4JFixScreenInfo extends Structure {
 	public int accel;
 
 	public short capabilities;
-	public short[] reserved; // __u16 reserved[2];
+	public short[] reserved = new short[2];
 
 	@Override
 	public String toString() {
 		return super.toString() +
-			"id:" + id +
+			"id:" + new String( id ) +
 			", " +
 			"smem_len:" + smem_len +
 			", " +

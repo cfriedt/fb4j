@@ -8,7 +8,7 @@ import org.jruby.ext.posix.*;
 
 public class FB4JFrameBuffer {
 
-	static final FB4JPOSIXHandler handler;
+	static final POSIXHandler handler;
 	static final POSIX posix;
 
 	static boolean debug = true;
@@ -40,7 +40,7 @@ public class FB4JFrameBuffer {
 	}
 
 	private int mapLength() {
-		return vinfo.bits_per_pixel/8 * vinfo.xres_virtual * vinfo.yres_virtual;
+		return vinfo.bits_per_pixel / Byte.SIZE * vinfo.xres_virtual * vinfo.yres_virtual;
 	}
 
 	public synchronized FB4JVarScreenInfo getVarScreenInfo()
@@ -118,7 +118,7 @@ public class FB4JFrameBuffer {
 	}
 
 	static {
-		handler = new FB4JPOSIXHandler();
+		handler = new DummyPOSIXHandler();
 		posix = POSIXFactory.getPOSIX( handler, true );
 	}
 }

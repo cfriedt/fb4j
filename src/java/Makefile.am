@@ -1,9 +1,9 @@
 _fb4j_java_srcs = \
-  org/fb4j/FB4JFrameBuffer.java \
-  org/fb4j/FB4JFixScreenInfo.java \
-  org/fb4j/FB4JVarScreenInfo.java \
-  org/fb4j/FB4JInfo.java
-
+	org/fb4j/FB4JBitField.java \
+	org/fb4j/FB4JFixScreenInfo.java \
+	org/fb4j/FB4JFrameBuffer.java \
+	org/fb4j/FB4JPOSIXHandler.java \
+	org/fb4j/FB4JVarScreenInfo.java
 
 fb4jdir = $(datadir)/fb4j/lib
 fb4j_JAVA = $(_fb4j_java_srcs)
@@ -23,10 +23,9 @@ org/fb4j/FB4JInfo.java: $(top_srcdir)/COPYING $(top_srcdir)/AUTHORS
 	echo '"";' >> $@
 	echo '}' >> $@
 
-$(top_builddir)/org/fb4j/FB4JInfo.class: org/fb4j/FB4JInfo.java
-	mkdir -p $(top_builddir)/org/fb4j
-	cd $(top_srcdir)/src/java && \
-	  javac -d $(top_builddir)/ $<
+org/fb4j/FB4JInfo.class: org/fb4j/FB4JInfo.java
+	mkdir -p $(dir $@)
+	@CLASSPATH_ENV@ $(JAVAC) -d $(JAVAROOT) $(AM_JAVACFLAGS) $<
 
 $(top_builddir)/fb4j.jar: classfb4j.stamp $(top_builddir)/org/fb4j/FB4JInfo.class
 	cd $(top_builddir) && \
