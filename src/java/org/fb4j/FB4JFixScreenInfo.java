@@ -1,8 +1,10 @@
 package org.fb4j;
 
+import java.util.*;
+
 import com.sun.jna.*;
 
-public class FB4JFixScreenInfo {
+public class FB4JFixScreenInfo extends Structure {
 
 	public static class ByReference extends FB4JFixScreenInfo implements Structure.ByReference {}
 
@@ -42,5 +44,10 @@ public class FB4JFixScreenInfo {
 			", " +
 			"line_length:" + line_length +
 			"";
+	}
+
+	@Override
+	protected List getFieldOrder() {
+		return Arrays.asList( new String[] { "id", "smem_start", "smem_len", "type", "type_aux", "visual", "xpanstep", "ypanstep", "ywrapstep", "line_length", "mmio_start", "mmio_len", "accel", "capabilities", "reserved", } );
 	}
 }

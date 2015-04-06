@@ -1,5 +1,7 @@
 package org.fb4j;
 
+import java.util.*;
+
 import com.sun.jna.*;
 
 public class FB4JVarScreenInfo extends Structure {
@@ -43,6 +45,12 @@ public class FB4JVarScreenInfo extends Structure {
 	public int colorspace;
 
 	public int[] reserved; // __u32 reserved[4];
+
+
+	@Override
+	protected List getFieldOrder() {
+		return Arrays.asList( new String[] { "xres", "yres", "xres_virtual", "yres_virtual", "xoffset", "yoffset", "bits_per_pixel", "grayscale", "red", "green", "blue", "transp", "nonstd", "activate", "height", "width", "accel_flags", "pixclock", "left_margin", "right_margin", "upper_margin", "lower_margin", "hsync_len", "vsync_len", "sync", "vmode", "rotate", "colorspace", "reserved", } );
+	}
 
 	@Override
 	public String toString() {

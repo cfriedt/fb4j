@@ -1,5 +1,7 @@
 package org.fb4j;
 
+import java.util.*;
+
 import com.sun.jna.*;
 
 public class FB4JBitField extends Structure {
@@ -19,5 +21,10 @@ public class FB4JBitField extends Structure {
 			", " +
 			"msb_right: " + msb_right +
 			"";
+	}
+
+	@Override
+	protected List getFieldOrder() {
+		return Arrays.asList( new String[] { "offset", "length", "msb_right", } );
 	}
 }
