@@ -9,7 +9,7 @@ fi
 
 if [ "$1" = clean ]; then
   if [ -e "Makefile" ]; then
-    make clean
+    make clean &> /dev/null
   fi
   for e in la lo lai o so in m4 stamp class inc; do
     rm -f $(find . -name "*.${e}" -type f)
