@@ -1,2 +1,2 @@
 SUBDIRS = \
-  java
+	java

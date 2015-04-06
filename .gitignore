@@ -32,4 +32,4 @@ depcomp
 .deps/
 .libs/
 compile
-
+/src/java/org/fb4j/FB4JInfo.java
