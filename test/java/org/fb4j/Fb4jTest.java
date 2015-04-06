@@ -10,12 +10,12 @@ public class Fb4jTest {
 	static final int white = 0xffffff;
 	static final int teal = 0x008080;
 	static final int orange = 0xffa500;
-	
+
 	static final int red = 0xff0000;
 	static final int green = 0x00ff00;
 	static final int blue = 0x0000ff;
 	static final int yellow = 0xffff00;
-	
+
 	static class Ball {
 		final int r, w, h;
 		int x, y;
@@ -68,11 +68,11 @@ public class Fb4jTest {
 					if ( (int)rr < r ) {
 						pixel[(yoffs+row)*w + col] = color;
 					}
-				}				
+				}
 			}
 		}
 	}
-	
+
 	static void func() throws Throwable {
 
 		System.out.println("FB4J v" + FB4JInfo.version);
@@ -81,13 +81,13 @@ public class Fb4jTest {
 			System.out.println("\t" + s);
 		}
 		System.out.println("\n\nTerms of Use:\n\n" + FB4JInfo.license);
-		
+
 		Thread.sleep(2000);
-		
+
 		fb = new FB4JFrameBuffer();
 		vinfo = fb.getVarScreenInfo();
-		vinfo.setXresVirtual(vinfo.getXres());
-		vinfo.setYresVirtual(2*vinfo.getYres());
+		vinfo.xres_virtual = vinfo.xres;
+		vinfo.yres_virtual = 2 * vinfo.yres;
 		fb.putVarScreenInfo(vinfo);
 		finfo = fb.getFixScreenInfo();
 
@@ -101,22 +101,22 @@ public class Fb4jTest {
 		System.out.println( ("" + finfo).replaceAll(",", "\n\t") );
 		System.out.println();
 
-		final int w=vinfo.getXres(), h=vinfo.getYres(), hmax = vinfo.getYresVirtual();
+		final int w=vinfo.xres, h=vinfo.yres, hmax = vinfo.yres_virtual;
 
 		pixel = fb.asByteBuffer().asIntBuffer().array();
-		
+
 		Ball redball = new Ball(Math.min(w,h)/10, w/5, h/5, 5, 7, w, h);
 		Ball greenball = new Ball(Math.min(w,h)/10, w/5*2, h/5*2, -7, 5, w, h);
 		Ball blueball = new Ball(Math.min(w,h)/10, w/5*3, h/5*3, 5, -7, w, h);
 		Ball yellowball = new Ball(Math.min(w,h)/10, w/5*4, h/5*4, 5, -7, w, h);
 		int yoffs, frames;
 		long ms, new_ms;
-		
+
 		int[] blank = new int[w*h];
 		for(int i=0; i<blank.length; i++) {
 			blank[i] = white;
 		}
-		
+
 		for(frames=0, ms = System.currentTimeMillis(), yoffs=h;; yoffs += h, yoffs %= hmax) {
 			// draw a blank screen
 			System.arraycopy(blank,0,pixel,yoffs*w,blank.length);
@@ -129,9 +129,9 @@ public class Fb4jTest {
 			blueball.draw(yoffs, blue);
 			yellowball.update();
 			yellowball.draw(yoffs, yellow);
-			vinfo.setYoffset(yoffs);
+			vinfo.yoffset = yoffs;
 			fb.flip();
-			
+
 			frames++;
 			new_ms = System.currentTimeMillis();
 			if ( new_ms - ms  >= 5000 ) {
