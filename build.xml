@@ -1,82 +1,34 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- WARNING: Eclipse auto-generated file.
-              Any modifications will be overwritten.
-              To include a user specific buildfile here, simply create one in the same
-              directory with the processing instruction <?eclipse.ant.import?>
-              as the first entry and export the buildfile again. -->
-<project basedir="." default="build" name="fb4j">
-    <property environment="env"/>
-    <property name="jna.location" value="../jna"/>
-    <property name="jna-posix.location" value="../jna-posix"/>
-    <property name="debuglevel" value="source,lines,vars"/>
-    <property name="target" value="1.6"/>
-    <property name="source" value="1.6"/>
-    <path id="JUnit 3.libraryclasspath">
-        <pathelement location="../../Applications/eclipse/plugins/org.junit_4.11.0.v201303080030/junit.jar"/>
-    </path>
-    <path id="jna.classpath">
-        <pathelement location="${jna.location}/build.eclipse/classes"/>
-        <pathelement location="${jna.location}/build.eclipse/test-classes"/>
-        <path refid="JUnit 3.libraryclasspath"/>
-        <pathelement location="${jna.location}/lib/test/reflections-0.9.8.jar"/>
-    </path>
-    <path id="jna-posix.classpath">
-        <pathelement location="${jna-posix.location}/bin"/>
-        <pathelement location="${jna-posix.location}/lib/junit-4.4.jar"/>
-        <path refid="jna.classpath"/>
-    </path>
-    <path id="fb4j.classpath">
-        <pathelement location="bin"/>
-        <path refid="jna.classpath"/>
-        <path refid="jna-posix.classpath"/>
-    </path>
-    <target name="init">
-        <mkdir dir="bin"/>
-        <copy includeemptydirs="false" todir="bin">
-            <fileset dir="src/java">
-                <exclude name="**/*.java"/>
-            </fileset>
-        </copy>
-    </target>
-    <target name="clean">
-        <delete dir="bin"/>
-    </target>
-    <target depends="clean" name="cleanall">
-        <ant antfile="build.xml" dir="${jna.location}" inheritAll="false" target="clean"/>
-        <ant antfile="build.xml" dir="${jna-posix.location}" inheritAll="false" target="clean"/>
-    </target>
-    <target depends="build-subprojects,build-project" name="build"/>
-    <target name="build-subprojects">
-        <ant antfile="build.xml" dir="${jna.location}" inheritAll="false" target="build-project">
-            <propertyset>
-                <propertyref name="build.compiler"/>
-            </propertyset>
-        </ant>
-        <ant antfile="build.xml" dir="${jna-posix.location}" inheritAll="false" target="build-project">
-            <propertyset>
-                <propertyref name="build.compiler"/>
-            </propertyset>
-        </ant>
-    </target>
-    <target depends="init" name="build-project">
-        <echo message="${ant.project.name}: ${ant.file}"/>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
-            <src path="src/java"/>
-            <classpath refid="fb4j.classpath"/>
-        </javac>
-    </target>
-    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
-    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
-        <copy todir="${ant.library.dir}">
-            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
-        </copy>
-        <unzip dest="${ant.library.dir}">
-            <patternset includes="jdtCompilerAdapter.jar"/>
-            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
-        </unzip>
-    </target>
-    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
-        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
-        <antcall target="build"/>
-    </target>
-</project>
+<?xml version="1.0"?>
+<project name="fb4j" default="main" basedir=".">
+
+  <property name="src.dir" location="src" />
+  <property name="build.dir" location="bin" />
+  <property name="dist.dir" location="lib" />
+
+  <target name="clean">
+    <delete dir="${build.dir}" />
+    <delete dir="${docs.dir}" />
+    <delete dir="${dist.dir}" />
+  </target>
+
+  <target name="makedir">
+    <mkdir dir="${build.dir}" />
+    <mkdir dir="${docs.dir}" />
+    <mkdir dir="${dist.dir}" />
+  </target>
+
+  <target name="compile" depends="clean, makedir">
+    <javac srcdir="${src.dir}" destdir="${build.dir}" />
+  </target>
+
+  <target name="jar" depends="compile">
+    <jar destfile="${dist.dir}/fb4j.jar" basedir="${build.dir}">
+      <manifest />
+    </jar>
+  </target>
+
+  <target name="main" depends="compile, jar">
+    <description>Main target</description>
+  </target>
+
+</project> 
