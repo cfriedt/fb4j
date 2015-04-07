@@ -1,19 +1,23 @@
 package org.fb4j;
-public class Fb4jJniTest {
+
+public class Fb4jDemo {
+	static FB4JFrameBuffer fb;
+	static FB4JVarScreenInfo vinfo;
+	static FB4JFixScreenInfo finfo;
+	static int[] pixel;
+
 	static final int black = 0;
 	static final int white = 0xffffff;
 	static final int teal = 0x008080;
 	static final int orange = 0xffa500;
-	
+
 	static final int red = 0xff0000;
 	static final int green = 0x00ff00;
 	static final int blue = 0x0000ff;
 	static final int yellow = 0xffff00;
-	
-	int pixel[], w, h;
-	
-	private class Ball {
-		final int r;
+
+	static class Ball {
+		final int r, w, h;
 		int x, y;
 		int dx, dy;
 		Ball(int radius, int xpos, int ypos, int vx, int vy, int width, int height) {
@@ -47,7 +51,7 @@ public class Fb4jJniTest {
 			x += dx;
 			y += dy;
 		}
-		void draw(int color) {
+		void draw(int yoffs, int color) {
 			int row, col;
 			for( row=y-r; row<y+r; row++) {
 				for( col=x-r; col<x+r; col++) {
@@ -62,16 +66,35 @@ public class Fb4jJniTest {
 						Math.pow(Math.abs(rowf - yy), 2.0f)
 					);
 					if ( (int)rr < r ) {
-						pixel[row*w + col] = color;
+						pixel[(yoffs+row)*w + col] = color;
 					}
-				}				
+				}
 			}
 		}
 	}
-	
-	void func() {
+
+	static void func() throws Throwable {
+
+		fb = new FB4JFrameBuffer();
+		vinfo = fb.getVarScreenInfo();
+		vinfo.xres_virtual = vinfo.xres;
+		vinfo.yres_virtual = 2 * vinfo.yres;
+		fb.putVarScreenInfo(vinfo);
+		finfo = fb.getFixScreenInfo();
 
 		System.out.println();
+
+		System.out.print("vinfo:\n\t");
+		System.out.println( ("" + vinfo).replaceAll(",", "\n\t") );
+		System.out.println();
+
+		System.out.print("finfo:\n\t");
+		System.out.println( ("" + finfo).replaceAll(",", "\n\t") );
+		System.out.println();
+
+		final int w=vinfo.xres, h=vinfo.yres, hmax = vinfo.yres_virtual;
+
+		pixel = fb.asByteBuffer().asIntBuffer().array();
 
 		Ball redball = new Ball(Math.min(w,h)/10, w/5, h/5, 5, 7, w, h);
 		Ball greenball = new Ball(Math.min(w,h)/10, w/5*2, h/5*2, -7, 5, w, h);
@@ -79,26 +102,27 @@ public class Fb4jJniTest {
 		Ball yellowball = new Ball(Math.min(w,h)/10, w/5*4, h/5*4, 5, -7, w, h);
 		int yoffs, frames;
 		long ms, new_ms;
-		
+
 		int[] blank = new int[w*h];
 		for(int i=0; i<blank.length; i++) {
 			blank[i] = white;
 		}
-		
-		for(frames=0, ms = System.currentTimeMillis();true;) {
+
+		for(frames=0, ms = System.currentTimeMillis(), yoffs=h;; yoffs += h, yoffs %= hmax) {
 			// draw a blank screen
-			System.arraycopy(blank,0,pixel,0,blank.length);
+			System.arraycopy(blank,0,pixel,yoffs*w,blank.length);
 
 			redball.update();
-			redball.draw(red);
+			redball.draw(yoffs, red);
 			greenball.update();
-			greenball.draw(green);
+			greenball.draw(yoffs, green);
 			blueball.update();
-			blueball.draw(blue);
+			blueball.draw(yoffs, blue);
 			yellowball.update();
-			yellowball.draw(yellow);
-			paint(pixel);
-			
+			yellowball.draw(yoffs, yellow);
+			vinfo.yoffset = yoffs;
+			fb.flip();
+
 			frames++;
 			new_ms = System.currentTimeMillis();
 			if ( new_ms - ms  >= 5000 ) {
@@ -108,24 +132,12 @@ public class Fb4jJniTest {
 			}
 		}
 	}
-	public Fb4jJniTest() {
-		w = getWidth();
-		h = getHeight();
-		pixel = new int[w*h];
-	}
-	private static native void init();
-	private static native void fini();
-	private static native int getWidth();
-	private static native int getHeight();
-	private static native void paint(int[] screen);
 
 	public static void main(String[] arg) {
-		Fb4jJniTest t = new Fb4jJniTest();
-		t.func();
-	}
-	
-	static {
-		System.loadLibrary("TestFBJNI");
-		init();
+		try {
+			func();
+		} catch(Throwable t) {
+			t.printStackTrace();
+		}
 	}
 }
