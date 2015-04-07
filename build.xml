@@ -4,7 +4,6 @@
   <property name="src.dir" location="src" />
   <property name="build.dir" location="bin" />
   <property name="dist.dir" location="dist" />
-  <property name="lib.dir" location="lib" />
 
   <target name="clean">
     <delete dir="${build.dir}" />
@@ -14,7 +13,6 @@
   <target name="makedir">
     <mkdir dir="${build.dir}" />
     <mkdir dir="${dist.dir}" />
-    <mkdir dir="${lib.dir}" />
   </target>
 
   <target name="compile" depends="clean, makedir">
