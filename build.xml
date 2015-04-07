@@ -7,13 +7,11 @@
 
   <target name="clean">
     <delete dir="${build.dir}" />
-    <delete dir="${docs.dir}" />
     <delete dir="${dist.dir}" />
   </target>
 
   <target name="makedir">
     <mkdir dir="${build.dir}" />
-    <mkdir dir="${docs.dir}" />
     <mkdir dir="${dist.dir}" />
   </target>
 
