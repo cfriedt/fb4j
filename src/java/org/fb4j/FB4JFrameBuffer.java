@@ -118,7 +118,7 @@ public class FB4JFrameBuffer {
 	}
 
 	static {
-		handler = new DummyPOSIXHandler();
+		handler = new FB4JPOSIXHandler();
 		posix = POSIXFactory.getPOSIX( handler, true );
 	}
 }
