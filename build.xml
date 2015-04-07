@@ -18,7 +18,11 @@
   </target>
 
   <target name="compile" depends="clean, makedir">
-    <javac srcdir="${src.dir}" destdir="${build.dir}" />
+    <javac srcdir="${src.dir}" destdir="${build.dir}">
+      <classpath>
+      	<pathelement path="${java.class.path}/"/>
+      </classpath>
+    </javac>
   </target>
 
   <target name="jar" depends="compile">
