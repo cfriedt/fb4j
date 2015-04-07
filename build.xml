@@ -18,7 +18,9 @@
   <target name="compile" depends="clean, makedir">
     <javac srcdir="${src.dir}" destdir="${build.dir}">
       <classpath>
-      	<pathelement path="${java.class.path}/"/>
+      	<pathelement location="lib/jna.jar"/>
+      	<pathelement location="lib/platform.jar"/>
+      	<pathelement location="lib/jna-posix.jar"/>
       </classpath>
     </javac>
   </target>
