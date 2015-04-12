@@ -1,5 +1,5 @@
-<!-- adapted from http://www.vogella.com/tutorials/ApacheAnt/article.html#antexample_buildxml -->
 <?xml version="1.0"?>
+<!-- adapted from http://www.vogella.com/tutorials/ApacheAnt/article.html#antexample_buildxml -->
 <project name="fb4j" default="main" basedir=".">
 
   <property name="src.dir" location="src" />

@@ -105,19 +105,26 @@ public class Fb4jDemo {
 
 		fb = new FB4JFrameBuffer();
 		vinfo = fb.getVarScreenInfo();
+
+		System.out.print("vinfo:\n\t");
+		System.out.println( ("" + vinfo).replaceAll(", ", "\n\t") );
+		System.out.println();
+		
+		vinfo.bits_per_pixel = 32;
 		vinfo.xres_virtual = vinfo.xres;
 		vinfo.yres_virtual = 2 * vinfo.yres;
+
 		fb.putVarScreenInfo(vinfo);
 		finfo = fb.getFixScreenInfo();
 
 		System.out.println();
 
 		System.out.print("vinfo:\n\t");
-		System.out.println( ("" + vinfo).replaceAll(",", "\n\t") );
+		System.out.println( ("" + vinfo).replaceAll(", ", "\n\t") );
 		System.out.println();
 
 		System.out.print("finfo:\n\t");
-		System.out.println( ("" + finfo).replaceAll(",", "\n\t") );
+		System.out.println( ("" + finfo).replaceAll(", ", "\n\t") );
 		System.out.println();
 
 		final int w=vinfo.xres, h=vinfo.yres, hmax = vinfo.yres_virtual;

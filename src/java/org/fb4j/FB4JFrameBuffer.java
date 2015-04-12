@@ -29,6 +29,7 @@
 package org.fb4j;
 
 import java.io.*;
+import java.lang.reflect.*;
 import java.nio.*;
 import java.nio.channels.*;
 
@@ -44,17 +45,35 @@ public class FB4JFrameBuffer {
 	static String fn = "/dev/fb0";
 
 	RandomAccessFile raf;
+	int fdint;
 	FileDescriptor fd;
 	FileChannel fc;
 	MappedByteBuffer mbb;
 	FB4JFixScreenInfo finfo;
 	FB4JVarScreenInfo vinfo;
 
+	private static int fdint( FileDescriptor fd )
+	throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+	{
+		Field f = null;
+		try {
+			f = fd.getClass().getField( "fd" );
+		} catch( NoSuchFieldException e ) {
+		}
+		if ( null == f ) {
+			f = fd.getClass().getDeclaredField( "fd" );
+		}
+		f.setAccessible( true );
+		return f.getInt( fd );
+	}
+	
 	public FB4JFrameBuffer( String fn ) {
 		try {
 			raf = new RandomAccessFile(fn, "rw");
 			fc = raf.getChannel();
 			fd = raf.getFD();
+			fdint = fdint( fd );
+			System.out.println( "fd is " + fd + ", fdint is " + fdint );
 			vinfo = getVarScreenInfo();
 			finfo = getFixScreenInfo();
 			mbb = fc.map(FileChannel.MapMode.READ_WRITE,0,mapLength());
@@ -90,8 +109,8 @@ public class FB4JFrameBuffer {
 	throws IOException
 	{
 		final int FBIOPUT_VSCREENINFO = 0x4601;
-		if ( null != vinfo ) {
-			int r = posix.ioctl( fd, FBIOPUT_VSCREENINFO, vinfo );
+		if ( null != info ) {
+			int r = posix.ioctl( fd, FBIOPUT_VSCREENINFO, info );
 			if ( -1 == r ) {
 				int errno = posix.errno();
 				throw new IOException( "errno: " + errno );

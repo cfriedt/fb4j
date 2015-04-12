@@ -56,8 +56,13 @@ public class FB4JFixScreenInfo extends Structure {
 	public short[] reserved = new short[2];
 
 	@Override
+	protected List getFieldOrder() {
+		return Arrays.asList( new String[] { "id", "smem_start", "smem_len", "type", "type_aux", "visual", "xpanstep", "ypanstep", "ywrapstep", "line_length", "mmio_start", "mmio_len", "accel", "capabilities", "reserved", } );
+	}
+
+	@Override
 	public String toString() {
-		return super.toString() +
+		return getClass().getName() + "@" + getClass().getName() + '@' + Integer.toHexString(hashCode()) + ", " +
 			"id:" + new String( id ) +
 			", " +
 			"smem_len:" + smem_len +
@@ -72,10 +77,5 @@ public class FB4JFixScreenInfo extends Structure {
 			", " +
 			"line_length:" + line_length +
 			"";
-	}
-
-	@Override
-	protected List getFieldOrder() {
-		return Arrays.asList( new String[] { "id", "smem_start", "smem_len", "type", "type_aux", "visual", "xpanstep", "ypanstep", "ywrapstep", "line_length", "mmio_start", "mmio_len", "accel", "capabilities", "reserved", } );
 	}
 }
