@@ -62,7 +62,7 @@ public class FB4JFixScreenInfo extends Structure {
 
 	@Override
 	public String toString() {
-		return getClass().getName() + "@" + getClass().getName() + '@' + Integer.toHexString(hashCode()) + ", " +
+		return getClass().getName() + '@' + Integer.toHexString(hashCode()) + ", " +
 			"id:" + new String( id ) +
 			", " +
 			"smem_len:" + smem_len +

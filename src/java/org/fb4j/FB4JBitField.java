@@ -42,7 +42,7 @@ public class FB4JBitField extends Structure {
 
 	@Override
 	public String toString() {
-		return getClass().getName() + "@" + getClass().getName() + '@' + Integer.toHexString(hashCode()) + ", " +
+		return getClass().getName() + '@' + Integer.toHexString(hashCode()) + ", " +
 			"offset: " + offset +
 			", " +
 			"length: " + length +

@@ -82,8 +82,7 @@ public class FB4JVarScreenInfo extends Structure {
 
 	@Override
 	public String toString() {
-		return
-			getClass().getName() + "@" + getClass().getName() + '@' + Integer.toHexString(hashCode()) + ", " +
+		return getClass().getName() + '@' + Integer.toHexString(hashCode()) + ", " +
 			"xres:" + xres +
 			", " +
 			"yres:" + yres +
